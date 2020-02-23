@@ -44,7 +44,20 @@ https://telegram.me/serverless_tgbot_example_bot
     ```
 - _(Optional) Write your own bot logic code in [functions/src/lib/bot/controller.js](functions/src/lib/bot/controller.js). For testing your environment and deployment, you can leave it as is and test the build-in `/start` command._
 
-    https://github.com/au5ton/serverless-bot/blob/dbeb644bdf9fcd2413d6dae3f40ce32229f8535c/functions/src/lib/bot/controller.js#L3-L10
+    ```javascript
+    // in functions/src/lib/bot/controller.js
+
+    // ...
+    const Telegraf = require('telegraf')
+    const bot = new Telegraf(config.telegram.bot_token, {
+        telegram: { webhookReply: true }
+    })
+
+    bot.command('start', ctx => {
+        return ctx.reply('Hello from Cloud Function')
+    })
+    // ...
+    ```
 
 - When ready, deploy to Firebase:
 
