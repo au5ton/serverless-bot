@@ -3,6 +3,7 @@
   "description": "Cloud Functions for Firebase",
   "scripts": {
     "preinstall": "sh scripts/npm/preinstall.sh",
+    "polling": "node src/server.js --polling",
     "lint": "eslint .",
     "serve": "firebase serve --only functions",
     "shell": "firebase functions:shell",
@@ -15,11 +16,14 @@
     "node": "10"
   },
   "dependencies": {
+    "argparse": "^1.0.10",
     "chalk": "^3.0.0",
+    "death": "^1.1.0",
     "express": "^4.17.1",
     "firebase-admin": "^8.6.0",
     "firebase-functions": "^3.3.0",
     "node-fetch": "^2.6.0",
+    "root-require": "^0.3.1",
     "telegraf": "^3.36.0"
   },
   "devDependencies": {

@@ -3,7 +3,7 @@ const controller = require('./controller')
 const config = require('../config')
 
 router.get('/me', controller.getMe)
-router.get('/hook', controller.setHook)
-router.post(`/${config.telegram.webhook_secret}`, controller.webhook)
+router.get('/hook', controller.setWebhook)
+router.post(`/${config.telegram.webhook_secret}`, controller.handleWebhook)
 
 module.exports = router

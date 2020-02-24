@@ -21,6 +21,8 @@ const dev = load();
 const flag = empty(prod);
 prod.__meta__config_ds = 'prod';
 dev.__meta__config_ds = 'dev';
+prod.package = require('root-require')('package.json');
+dev.package = require('root-require')('package.json');
 
 // supplies the local config if `functions.config()` supplies an empty object
 module.exports = flag ? dev : prod

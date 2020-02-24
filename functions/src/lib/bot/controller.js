@@ -1,20 +1,32 @@
 const config = require('../config')
+const chalk = require('chalk')
+const fetch = require('node-fetch')
 
-const Telegraf = require('telegraf')
-const bot = new Telegraf(config.telegram.bot_token, {
-    telegram: { webhookReply: true }
-})
+module.exports.getBot = () => {
+    const Telegraf = require('telegraf')
+    const bot = new Telegraf(config.telegram.bot_token, {
+        telegram: { webhookReply: true }
+    })
 
-bot.command('start', ctx => {
-    return ctx.reply('Hello from Cloud Function')
-})
+    bot.command('start', ctx => {
+        return ctx.reply('Hello from Cloud Function')
+    })
+
+    return bot
+}
 
 module.exports.getMe = async (req, res) => {
+    const bot = module.exports.getBot()
+
     let me = await bot.telegram.getMe()
     return res.json(me)
 }
 
-module.exports.setHook = async (req, res) => {
+module.exports.setWebhook = async (req, res) => {
+    const bot = module.exports.getBot()
+
+    console.log('Setting webhook: https://*.cloudfunctions.net/*')
+
     try {
         await bot.telegram.setWebhook(`https://${config.gcp.datacenter}-${config.gcp.project_id}.cloudfunctions.net/api/bot/${config.telegram.webhook_secret}`);
         return res.json({
@@ -30,7 +42,29 @@ module.exports.setHook = async (req, res) => {
     }
 }
 
-module.exports.webhook = async (req, res) => {
-    console.log('POST /webhook')
+module.exports.getWebhook = async () => {
+    console.log('Determining current webhook URL...')
+    let res = await fetch(`https://api.telegram.org/bot${config.telegram.bot_token}/getWebhookInfo`)
+    return await res.json()
+}
+
+module.exports.handleWebhook = async (req, res) => {
+    const bot = module.exports.getBot()
+    console.log(`POST /${config.telegram.webhook_secret} : Webhook handled`)
     await bot.handleUpdate(req.body, res)
+}
+
+module.exports.startPolling = async () => {
+    const bot = module.exports.getBot()
+
+    console.log(chalk.yellowBright('Starting bot with polling, disabling webhook...'))
+
+    await bot.telegram.setWebhook('')
+
+    let data = await module.exports.getWebhook()
+    console.log(data)
+
+    await bot.launch()
+
+    return bot
 }
