@@ -25,8 +25,6 @@ module.exports.getMe = async (req, res) => {
 module.exports.setWebhook = async (req, res) => {
     const bot = module.exports.getBot()
 
-    console.log('Setting webhook: https://*.cloudfunctions.net/*')
-
     try {
         await bot.telegram.setWebhook(`https://${config.gcp.datacenter}-${config.gcp.project_id}.cloudfunctions.net/api/bot/${config.telegram.webhook_secret}`);
         return res.json({
@@ -43,7 +41,6 @@ module.exports.setWebhook = async (req, res) => {
 }
 
 module.exports.getWebhook = async () => {
-    console.log('Determining current webhook URL...')
     let res = await fetch(`https://api.telegram.org/bot${config.telegram.bot_token}/getWebhookInfo`)
     return await res.json()
 }
@@ -60,9 +57,6 @@ module.exports.startPolling = async () => {
     console.log(chalk.yellowBright('Starting bot with polling, disabling webhook...'))
 
     await bot.telegram.setWebhook('')
-
-    let data = await module.exports.getWebhook()
-    console.log(data)
 
     await bot.launch()
 

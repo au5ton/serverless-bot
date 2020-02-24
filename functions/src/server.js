@@ -34,13 +34,16 @@ if(!module.parent) {
       if(args.polling) {
          const controller = require('./lib/bot/controller')
          let bot = await controller.startPolling()
+         console.log('done')
+         
          ON_DEATH(async (signal, err) => {
-            console.log(chalk.yellowBright('Process death signal received, stopping the bot'))
+            console.log(chalk.yellowBright('Process death signal received, stopping the bot...'))
             await bot.stop();
             console.log('Resetting the webhook to production...')
             // supply a "fake" Express.js response object
             await controller.setWebhook(null, {json:()=>{}})
-            console.log(await controller.getWebhook())
+            let info = await controller.getWebhook()
+            console.log(info.ok ? info.result.url : info)
             console.log('Goodbye')
          })
       }
