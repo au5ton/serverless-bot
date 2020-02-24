@@ -8,7 +8,7 @@ if test -f ../config.json; then
     exit
 fi
 
-cat <<EOT >> ../config.json
+cat <<EOT > ../config.json
 {
     "telegram": {
         "bot_token": "",
