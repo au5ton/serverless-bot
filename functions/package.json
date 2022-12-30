@@ -29,6 +29,6 @@
   "devDependencies": {
     "eslint": "^5.12.0",
     "eslint-plugin-promise": "^4.0.1",
-    "mocha": "^7.0.1"
+    "mocha": "^10.2.0"
   }
 }
